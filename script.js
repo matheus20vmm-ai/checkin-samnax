@@ -125,7 +125,7 @@ async function capturar(){
 
         await fetch(
 
-          "https://script.google.com/macros/s/AKfycbxL3l66DNWwyVPwlMvbYjT4yIuV9AqvldPiZmueq2Hc31w_0d9nlKBOSvh4xQ0Dmt8/exec",
+          "https://script.google.com/macros/s/AKfycbzjkakfg3BSdKFuxhdtCl297bk6Jb9tlrZyY5XHdf-Miny8725EK6H5Lk-iF0Lctevc/exec",
 
           {
 
