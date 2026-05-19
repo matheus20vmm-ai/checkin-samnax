@@ -24,16 +24,12 @@ async function iniciarCamera(){
 
     video.srcObject = stream;
 
-    video.onloadedmetadata = async()=>{
+    await video.play();
 
-      await video.play();
+    cameraPronta = true;
 
-      cameraPronta = true;
-
-      statusText.innerHTML =
-      "✅ Câmera frontal ativa";
-
-    };
+    statusText.innerHTML =
+    "✅ Câmera pronta";
 
   }
 
@@ -43,10 +39,6 @@ async function iniciarCamera(){
 
     statusText.innerHTML =
     "❌ Permita câmera";
-
-    alert(
-      "Permita acesso à câmera"
-    );
 
   }
 
@@ -58,12 +50,12 @@ window.onload = ()=>{
 
 };
 
-function capturar(){
+async function capturar(){
 
   if(!cameraPronta){
 
     alert(
-      "A câmera ainda não iniciou"
+      "Câmera não iniciou"
     );
 
     return;
@@ -82,31 +74,89 @@ function capturar(){
     return;
   }
 
-  const canvas =
-  document.getElementById("canvas");
+  navigator.geolocation
+  .getCurrentPosition(
 
-  canvas.width =
-  video.videoWidth;
+    async(pos)=>{
 
-  canvas.height =
-  video.videoHeight;
+      const canvas =
+      document.getElementById(
+        "canvas"
+      );
 
-  const ctx =
-  canvas.getContext("2d");
+      canvas.width =
+      video.videoWidth;
 
-  ctx.drawImage(
-    video,
-    0,
-    0,
-    canvas.width,
-    canvas.height
+      canvas.height =
+      video.videoHeight;
+
+      const ctx =
+      canvas.getContext("2d");
+
+      ctx.drawImage(
+        video,
+        0,
+        0
+      );
+
+      const imagem =
+      canvas.toDataURL(
+        "image/png"
+      );
+
+      const dados = {
+
+        nome:nome,
+
+        latitude:
+        pos.coords.latitude,
+
+        longitude:
+        pos.coords.longitude,
+
+        imagem:imagem
+
+      };
+
+      statusText.innerHTML =
+      "☁️ Enviando...";
+
+      const resposta =
+      await fetch(
+
+        "https://script.google.com/macros/s/AKfycby77AIICF8r463EKMhvZmyg3dOZU3ffYZBYXtjLBNvHatsHS31P5qCsbivDzbOwpnY8/exec",
+
+        {
+
+          method:"POST",
+
+          body:JSON.stringify(
+            dados
+          )
+
+        }
+
+      );
+
+      const json =
+      await resposta.json();
+
+      if(json.sucesso){
+
+        statusText.innerHTML =
+        "✅ CHECK-IN REALIZADO";
+
+      }
+
+      else{
+
+        statusText.innerHTML =
+        "❌ ERRO";
+
+      }
+
+    }
+
   );
 
-  const imagem =
-  canvas.toDataURL("image/png");
-
-  console.log(imagem);
-
-  statusText.innerHTML =
-  "✅ Selfie capturada";
 }
