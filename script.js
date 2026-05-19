@@ -1,10 +1,46 @@
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+  getFirestore,
+  addDoc,
+  collection
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+
+  apiKey:
+  "AIzaSyBLtXwO_TRZkQY4hsTEUlLINK_htwtaDUE",
+
+  authDomain:
+  "checkin-samnax.firebaseapp.com",
+
+  projectId:
+  "checkin-samnax",
+
+  storageBucket:
+  "checkin-samnax.firebasestorage.app",
+
+  messagingSenderId:
+  "927671247908",
+
+  appId:
+  "1:927671247908:web:bbfb641f7299f6e5cfe4b1"
+
+};
+
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getFirestore(app);
+
 const video =
 document.getElementById("video");
 
 const statusText =
 document.getElementById("status");
-
-let cameraPronta = false;
 
 async function iniciarCamera(){
 
@@ -26,19 +62,17 @@ async function iniciarCamera(){
 
     await video.play();
 
-    cameraPronta = true;
-
     statusText.innerHTML =
     "✅ Câmera pronta";
 
   }
 
-  catch(err){
+  catch(erro){
 
-    console.log(err);
+    console.log(erro);
 
     statusText.innerHTML =
-    "❌ Permita câmera";
+    "❌ Erro câmera";
 
   }
 
@@ -50,136 +84,99 @@ window.onload = ()=>{
 
 };
 
-async function capturar(){
+window.capturar = async()=>{
 
-  if(!cameraPronta){
+  try{
 
-    alert(
-      "Câmera não iniciou"
+    const nome =
+    document.getElementById("nome")
+    .value;
+
+    if(!nome){
+
+      alert(
+        "Digite seu nome"
+      );
+
+      return;
+    }
+
+    const canvas =
+    document.getElementById(
+      "canvas"
     );
 
-    return;
-  }
+    canvas.width =
+    video.videoWidth;
 
-  const nome =
-  document.getElementById("nome")
-  .value;
+    canvas.height =
+    video.videoHeight;
 
-  if(!nome){
+    const ctx =
+    canvas.getContext("2d");
 
-    alert(
-      "Digite seu nome"
+    ctx.drawImage(
+      video,
+      0,
+      0
     );
 
-    return;
-  }
+    const imagem =
+    canvas.toDataURL(
+      "image/jpeg",
+      0.5
+    );
 
-  navigator.geolocation
-  .getCurrentPosition(
+    statusText.innerHTML =
+    "☁️ Salvando...";
 
-    async(pos)=>{
+    navigator.geolocation
+    .getCurrentPosition(
 
-      try{
+      async(pos)=>{
 
-        const canvas =
-        document.getElementById(
-          "canvas"
-        );
+        await addDoc(
 
-        canvas.width =
-        video.videoWidth;
-
-        canvas.height =
-        video.videoHeight;
-
-        const ctx =
-        canvas.getContext("2d");
-
-        ctx.drawImage(
-          video,
-          0,
-          0
-        );
-
-        const imagem =
-        canvas.toDataURL(
-          "image/png"
-        );
-
-        const dados = {
-
-          nome:nome,
-
-          latitude:
-          pos.coords.latitude,
-
-          longitude:
-          pos.coords.longitude,
-
-          imagem:imagem
-
-        };
-
-        statusText.innerHTML =
-        "☁️ Enviando...";
-
-        const resposta =
-        await fetch(
-
-"https://script.google.com/macros/s/AKfycbx3x_1X1sJXiGN4SlAjIkI1f-fqOL7Enc_yaAR5J1J_Xx0W-tBjjsgbVD78LBgO6EY/exec",
+          collection(
+            db,
+            "checkins"
+          ),
 
           {
 
-            method:"POST",
+            nome:nome,
 
-            headers:{
-              "Content-Type":
-              "text/plain;charset=utf-8"
-            },
+            latitude:
+            pos.coords.latitude,
 
-            body:JSON.stringify(
-              dados
-            )
+            longitude:
+            pos.coords.longitude,
+
+            selfie:imagem,
+
+            data:
+            new Date()
 
           }
 
         );
 
-        const texto =
-        await resposta.text();
-
-        console.log(texto);
-
         statusText.innerHTML =
-        "✅ CHECK-IN REALIZADO";
+        "✅ CHECK-IN SALVO";
 
       }
 
-      catch(erro){
+    );
 
-        console.log(erro);
+  }
 
-        statusText.innerHTML =
-        "❌ Erro ao enviar";
+  catch(erro){
 
-      }
+    console.log(erro);
 
-    },
+    statusText.innerHTML =
+    "❌ ERRO";
 
-    ()=>{
+  }
 
-      alert(
-        "Permita localização"
-      );
-
-    },
-
-    {
-
-      enableHighAccuracy:true
-
-    }
-
-  );
-
-}
+};
