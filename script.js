@@ -79,81 +79,100 @@ async function capturar(){
 
     async(pos)=>{
 
-      const canvas =
-      document.getElementById(
-        "canvas"
-      );
+      try{
 
-      canvas.width =
-      video.videoWidth;
+        const canvas =
+        document.getElementById(
+          "canvas"
+        );
 
-      canvas.height =
-      video.videoHeight;
+        canvas.width =
+        video.videoWidth;
 
-      const ctx =
-      canvas.getContext("2d");
+        canvas.height =
+        video.videoHeight;
 
-      ctx.drawImage(
-        video,
-        0,
-        0
-      );
+        const ctx =
+        canvas.getContext("2d");
 
-      const imagem =
-      canvas.toDataURL(
-        "image/png"
-      );
+        ctx.drawImage(
+          video,
+          0,
+          0
+        );
 
-      const dados = {
+        const imagem =
+        canvas.toDataURL(
+          "image/png"
+        );
 
-        nome:nome,
+        const dados = {
 
-        latitude:
-        pos.coords.latitude,
+          nome:nome,
 
-        longitude:
-        pos.coords.longitude,
+          latitude:
+          pos.coords.latitude,
 
-        imagem:imagem
+          longitude:
+          pos.coords.longitude,
 
-      };
+          imagem:imagem
 
-      statusText.innerHTML =
-      "☁️ Enviando...";
+        };
 
-      const resposta =
-      await fetch(
+        statusText.innerHTML =
+        "☁️ Enviando...";
 
-        "https://script.google.com/macros/s/AKfycbxCaCKWT-1XneG2LD-Bj1cKCB6Y7orYh3VSmiuHxKjin6w1BFkqUxsIUozO4uGZoOlK/exec",
+        await fetch(
 
-        {
+          "https://script.google.com/macros/s/AKfycbxL3l66DNWwyVPwlMvbYjT4yIuV9AqvldPiZmueq2Hc31w_0d9nlKBOSvh4xQ0Dmt8/exec",
 
-          method:"POST",
+          {
 
-          body:JSON.stringify(
-            dados
-          )
+            method:"POST",
 
-        }
+            mode:"no-cors",
 
-      );
+            headers:{
+              "Content-Type":
+              "application/json"
+            },
 
-      const json =
-      await resposta.json();
+            body:JSON.stringify(
+              dados
+            )
 
-      if(json.sucesso){
+          }
+
+        );
 
         statusText.innerHTML =
         "✅ CHECK-IN REALIZADO";
 
       }
 
-      else{
+      catch(erro){
+
+        console.log(erro);
 
         statusText.innerHTML =
-        "❌ ERRO";
+        "❌ Erro ao enviar";
 
       }
+
+    },
+
+    ()=>{
+
+      alert(
+        "Permita localização"
+      );
+
+    },
+
+    {
+
+      enableHighAccuracy:true
 
     }
 
