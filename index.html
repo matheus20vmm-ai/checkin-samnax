@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAMNAX CHECK-IN</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="card">
+
+<h1>SAMNAX</h1>
+
+<p>CHECK-IN INTELIGENTE</p>
+
+<input id="nome" placeholder="Seu nome">
+
+<div class="camera">
+<video id="video" autoplay playsinline muted></video>
+</div>
+
+<button onclick="capturar()">
+REALIZAR CHECK-IN
+</button>
+
+<div id="status"></div>
+
+<canvas id="canvas"></canvas>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
