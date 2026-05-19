@@ -123,19 +123,18 @@ async function capturar(){
         statusText.innerHTML =
         "☁️ Enviando...";
 
+        const resposta =
         await fetch(
 
-          "https://script.google.com/macros/s/AKfycbzjkakfg3BSdKFuxhdtCl297bk6Jb9tlrZyY5XHdf-Miny8725EK6H5Lk-iF0Lctevc/exec",
+"https://script.google.com/macros/s/AKfycbzjkakfg3BSdKFuxhdtCl297bk6Jb9tlrZyY5XHdf-Miny8725EK6H5Lk-iF0Lctevc/exec",
 
           {
 
             method:"POST",
 
-            mode:"no-cors",
-
             headers:{
               "Content-Type":
-              "application/json"
+              "text/plain;charset=utf-8"
             },
 
             body:JSON.stringify(
@@ -145,6 +144,11 @@ async function capturar(){
           }
 
         );
+
+        const texto =
+        await resposta.text();
+
+        console.log(texto);
 
         statusText.innerHTML =
         "✅ CHECK-IN REALIZADO";
