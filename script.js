@@ -124,7 +124,7 @@ async function capturar(){
       const resposta =
       await fetch(
 
-        "https://script.google.com/macros/s/AKfycby77AIICF8r463EKMhvZmyg3dOZU3ffYZBYXtjLBNvHatsHS31P5qCsbivDzbOwpnY8/exec",
+        "https://script.google.com/macros/s/AKfycbxCaCKWT-1XneG2LD-Bj1cKCB6Y7orYh3VSmiuHxKjin6w1BFkqUxsIUozO4uGZoOlK/exec",
 
         {
 
